@@ -49,12 +49,12 @@ public class TreatsController : Controller
   public ActionResult AddFlavor(int id)
   {
     Treat thisTreat = _db.Treats.FirstOrDefault(treat => treat.TreatId == id);
-    ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+    ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Name");
     return View(thisTreat);
   }
 
   [HttpPost]
-  public ActionResult AddTreat(Treat treat, int flavorId)
+  public ActionResult AddFlavor(Treat treat, int flavorId)
   {
 #nullable enable
     FlavorTreat? joinEntity = _db.FlavorTreats.FirstOrDefault(join => (join.FlavorId == flavorId && join.TreatId == treat.TreatId));
@@ -65,5 +65,13 @@ public class TreatsController : Controller
       _db.SaveChanges();
     }
     return RedirectToAction("Details", new { id = treat.TreatId });
+  }
+  [HttpPost]
+  public ActionResult DeleteJoin(int joinId)
+  {
+    FlavorTreat joinEntry = _db.FlavorTreats.FirstOrDefault(entry => entry.FlavorTreatId == joinId);
+    _db.FlavorTreats.Remove(joinEntry);
+    _db.SaveChanges();
+    return RedirectToAction("Index");
   }
 }
