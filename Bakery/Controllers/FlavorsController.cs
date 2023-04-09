@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using Bakery.Models;
 
 namespace Bakery.Controllers;
@@ -35,5 +37,13 @@ public class FlavorsController : Controller
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+  }
+  public ActionResult Details(int id)
+  {
+    Flavor thisFlavor = _db.Flavors
+        .Include(item => item.JoinEntities)
+        .ThenInclude(join => join.Treat)
+        .FirstOrDefault(flavor => flavor.FlavorId == id);
+    return View(thisFlavor);
   }
 }
