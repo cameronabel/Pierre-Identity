@@ -41,7 +41,7 @@ public class AccountController : Controller
       IdentityResult result = await _userManager.CreateAsync(user, model.Password);
       if (result.Succeeded)
       {
-        return RedirectToAction("Index");
+        return RedirectToAction("Login");
       }
       else
       {
@@ -71,7 +71,7 @@ public class AccountController : Controller
       Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
       if (result.Succeeded)
       {
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Home");
       }
       else
       {
@@ -85,6 +85,6 @@ public class AccountController : Controller
   public async Task<ActionResult> LogOff()
   {
     await _signInManager.SignOutAsync();
-    return RedirectToAction("Index");
+    return RedirectToAction("Index", "Home");
   }
 }
