@@ -13,8 +13,14 @@ public class HomeController : Controller
   }
 
   [HttpGet("/")]
-  public ActionResult Index()
+  public async Task<ActionResult> Index()
   {
-    return View();
+    Dictionary<string, object[]> model = new Dictionary<string, object[]>();
+    Flavor[] flavors = _db.Flavors.ToArray();
+    model.Add("flavors", flavors);
+    Treat[] treats = _db.Treats.ToArray();
+    model.Add("treats", treats);
+
+    return View(model);
   }
 }

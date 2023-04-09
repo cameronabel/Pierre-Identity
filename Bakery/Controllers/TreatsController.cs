@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 using Bakery.Models;
 
 namespace Bakery.Controllers;
 
+[Authorize]
 public class TreatsController : Controller
 {
   private readonly BakeryContext _db;
