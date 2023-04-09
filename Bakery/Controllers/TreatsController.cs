@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 using Bakery.Models;
 
@@ -44,5 +45,25 @@ public class TreatsController : Controller
       .ThenInclude(join => join.Flavor)
       .FirstOrDefault(treat => treat.TreatId == id);
     return View(thisTreat);
+  }
+  public ActionResult AddFlavor(int id)
+  {
+    Treat thisTreat = _db.Treats.FirstOrDefault(treat => treat.TreatId == id);
+    ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+    return View(thisTreat);
+  }
+
+  [HttpPost]
+  public ActionResult AddTreat(Treat treat, int flavorId)
+  {
+#nullable enable
+    FlavorTreat? joinEntity = _db.FlavorTreats.FirstOrDefault(join => (join.FlavorId == flavorId && join.TreatId == treat.TreatId));
+#nullable disable
+    if (joinEntity == null && flavorId != 0)
+    {
+      _db.FlavorTreats.Add(new FlavorTreat() { TreatId = treat.TreatId, FlavorId = flavorId });
+      _db.SaveChanges();
+    }
+    return RedirectToAction("Details", new { id = treat.TreatId });
   }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 using Bakery.Models;
 
@@ -41,9 +42,29 @@ public class FlavorsController : Controller
   public ActionResult Details(int id)
   {
     Flavor thisFlavor = _db.Flavors
-        .Include(item => item.JoinEntities)
+        .Include(flavor => flavor.JoinEntities)
         .ThenInclude(join => join.Treat)
         .FirstOrDefault(flavor => flavor.FlavorId == id);
     return View(thisFlavor);
+  }
+  public ActionResult AddTreat(int id)
+  {
+    Flavor thisFlavor = _db.Flavors.FirstOrDefault(flavor => flavor.FlavorId == id);
+    ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+    return View(thisFlavor);
+  }
+
+  [HttpPost]
+  public ActionResult AddTreat(Flavor flavor, int treatId)
+  {
+#nullable enable
+    FlavorTreat? joinEntity = _db.FlavorTreats.FirstOrDefault(join => (join.TreatId == treatId && join.FlavorId == flavor.FlavorId));
+#nullable disable
+    if (joinEntity == null && treatId != 0)
+    {
+      _db.FlavorTreats.Add(new FlavorTreat() { TreatId = treatId, FlavorId = flavor.FlavorId });
+      _db.SaveChanges();
+    }
+    return RedirectToAction("Details", new { id = flavor.FlavorId });
   }
 }
