@@ -21,20 +21,17 @@ class Program
                       )
                     );
 
-    // New code below!!
     builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
               .AddEntityFrameworkStores<BakeryContext>()
               .AddDefaultTokenProviders();
 
     WebApplication app = builder.Build();
 
-    // app.UseDeveloperExceptionPage();
     app.UseHttpsRedirection();
     app.UseStaticFiles();
 
     app.UseRouting();
 
-    // New code below!
     app.UseAuthentication();
     app.UseAuthorization();
 

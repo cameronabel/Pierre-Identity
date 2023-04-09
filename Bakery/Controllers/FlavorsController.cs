@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Bakery.Models;
 
@@ -17,5 +16,9 @@ public class FlavorsController : Controller
   {
     List<Flavor> model = _db.Flavors.ToList();
     return View(model);
+  }
+  public ActionResult Create()
+  {
+    return View();
   }
 }
